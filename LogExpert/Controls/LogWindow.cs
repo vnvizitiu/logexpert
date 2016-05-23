@@ -586,6 +586,7 @@ namespace LogExpert
                     {
                         continue;
                     }
+
                     if (CheckHighlightEntryMatch(entry, line))
                     {
                         return entry;
@@ -639,6 +640,7 @@ namespace LogExpert
                 {
                     SelectLine(dataGridView.RowCount - 1, false);
                 }
+
                 dataGridView.Focus();
             }
         }
@@ -6525,8 +6527,10 @@ namespace LogExpert
         {
             var startInfo = new ProcessStartInfo();
 
+            var defaultFilePath = "C:/Projects/ModestTree/Modest3d/MTMEDITOR_1/Source/UnityProjects/Modest3d/Assets/Packages/Mtm.Editor.Infrastructure/Installers/EditorInstaller.cs";
+
             startInfo.FileName = "C:/Utils/Python34/python.exe";
-            startInfo.Arguments = string.Format("C:/Users/Steve/.vim/bundle/vim-config/Ave/Scripts/Python/OpenGvim.py \"{0}\" 1 \"call QuickFixHelper#PopulateQuickFixFromUnityStack()\"", FileName);
+            startInfo.Arguments = string.Format("C:/Users/Steve/.vim/bundle/vim-config/Ave/Scripts/Python/OpenGvim.py \"{0}\" 1 \"call QuickFixHelper#PopulateQuickFixFromUnityStack()\"", defaultFilePath);
 
             Process.Start(startInfo);
         }
@@ -6536,7 +6540,14 @@ namespace LogExpert
             int stacktraceColumn = 5;
 
             var selectedRow = dataGridView.SelectedRows[0];
-            var stackTrace = (string)selectedRow.Cells[stacktraceColumn].Value;
+            var cells = selectedRow.Cells;
+
+            if (stacktraceColumn >= cells.Count)
+            {
+                return null;
+            }
+
+            var stackTrace = (string)cells[stacktraceColumn].Value;
 
             if (stackTrace == null)
             {
